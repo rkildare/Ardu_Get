@@ -70,10 +70,16 @@ namespace quickmake
                     if (nope == false)
                     {
                         double[] graphvals = Array.ConvertAll<string, double>(strarr, double.Parse);
-                        if (graphvals.Length >= 1) { chartOut.Series["Series1"].Points.AddY(graphvals[0]); }
-                        if (graphvals.Length >= 2) { chartOut.Series["Series2"].Points.AddY(graphvals[1]); }
-                        if (graphvals.Length >= 3) { chartOut.Series["Series3"].Points.AddY(graphvals[2]); }
-                        if (graphvals.Length >= 4) { chartOut.Series["Series4"].Points.AddY(graphvals[3]); }
+                        int k = 0;
+                        while (k!=graphvals.Length)
+                        {
+                            chartOut.Series["Series" + (k+1).ToString()].Points.AddY(graphvals[k]);
+                            k = k + 1
+                        }
+                        //if (graphvals.Length >= 1) { chartOut.Series["Series1"].Points.AddY(graphvals[0]); }
+                        //if (graphvals.Length >= 2) { chartOut.Series["Series2"].Points.AddY(graphvals[1]); }
+                        //if (graphvals.Length >= 3) { chartOut.Series["Series3"].Points.AddY(graphvals[2]); }
+                        //if (graphvals.Length >= 4) { chartOut.Series["Series4"].Points.AddY(graphvals[3]); }
                     }
                 }
                 catch
