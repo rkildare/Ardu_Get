@@ -187,7 +187,7 @@
             this.Controls.Add(this.cmbPort);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
-            this.Text = "Arduino Data Getter V1.1";
+            this.Text = "Arduino Data Getter V2.0";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.chartOut)).EndInit();
             this.ResumeLayout(false);
