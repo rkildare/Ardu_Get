@@ -46,6 +46,9 @@ namespace quickmake
             btnStop.Enabled = false;
             port.Close();
             port.Dispose();
+            chkChScroll.Checked = false;
+            chkChScroll.Enabled = false;
+            trackZoom.Value = 0;
         }
         public void PrintSave(String read)
         {
@@ -71,15 +74,38 @@ namespace quickmake
                     {
                         double[] graphvals = Array.ConvertAll<string, double>(strarr, double.Parse);
                         int k = 0;
+                        string name;
+                        while (chartOut.Series.Count != graphvals.Length)
+                        {
+
+                            name = "Series" + (chartOut.Series.Count + 1).ToString();
+                            chartOut.Series.Add(name);
+                            if(btnSpline.Enabled == false)
+                            {
+                                chartOut.Series[name].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+                            }
+                            else if (btnLine.Enabled == false)
+                            {
+                                chartOut.Series[name].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+                            }
+                            else
+                            {
+                                chartOut.Series[name].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
+                            }
+                        }
                         while (k!=graphvals.Length)
                         {
-                            chartOut.Series["Series" + (k+1).ToString()].Points.AddY(graphvals[k]);
-                            k = k + 1
+                            name = "Series" + (k + 1).ToString();
+                            chartOut.Series[name].Points.AddY(graphvals[k]);
+                            k = k + 1;
                         }
-                        //if (graphvals.Length >= 1) { chartOut.Series["Series1"].Points.AddY(graphvals[0]); }
-                        //if (graphvals.Length >= 2) { chartOut.Series["Series2"].Points.AddY(graphvals[1]); }
-                        //if (graphvals.Length >= 3) { chartOut.Series["Series3"].Points.AddY(graphvals[2]); }
-                        //if (graphvals.Length >= 4) { chartOut.Series["Series4"].Points.AddY(graphvals[3]); }
+                        
+                        if(chkChScroll.Checked)
+                        {
+                            //chartOut.ChartAreas[0].AxisX.ScaleView.Zoom(chartOut.ChartAreas[0].AxisX.ScaleView.ViewMinimum + 1, chartOut.ChartAreas[0].AxisX.ScaleView.ViewMaximum + 1);
+                            chartOut.ChartAreas[0].AxisX.ScaleView.Scroll(System.Windows.Forms.DataVisualization.Charting.ScrollType.Last);
+                        }
+                        
                     }
                 }
                 catch
@@ -135,6 +161,89 @@ namespace quickmake
         private void Form1_Load(object sender, EventArgs e)
         {
             this.myDelegate = new AddDataDelegate(PrintSave);
+        }
+
+        private void BtnClearChart_Click(object sender, EventArgs e)
+        {
+            chartOut.Series.Clear();
+        }
+
+        private void BtnClearTxt_Click(object sender, EventArgs e)
+        {
+            rtxtOut.Text = "";
+        }
+
+        private void TrackZoom_Scroll(object sender, EventArgs e)
+        {
+            int zoom = trackZoom.Value;
+            if (zoom == 0)
+            {
+                chartOut.ChartAreas[0].AxisX.ScaleView.ZoomReset();
+                chkChScroll.Checked = false;
+                chkChScroll.Enabled = false;
+            }
+            else
+            {
+                int num = Convert.ToInt32(chartOut.ChartAreas[0].AxisX.Maximum);
+                zoom = (-num/10)*zoom+num;
+                chartOut.ChartAreas[0].AxisX.ScaleView.Zoom(0,zoom);
+                chkChScroll.Enabled = true;
+            }
+            
+        }
+
+        private void BtnSpline_Click(object sender, EventArgs e)
+        {
+            btnSpline.Enabled = false;
+            btnLine.Enabled = true;
+            btnScatter.Enabled = true;
+            if (chartOut.Series.Count!=0)
+            {
+                for (int i = 0; i < chartOut.Series.Count; i++ )
+                {
+                    chartOut.Series[i].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+                }
+            }
+        }
+
+        private void BtnLine_Click(object sender, EventArgs e)
+        {
+            btnSpline.Enabled = true;
+            btnLine.Enabled = false;
+            btnScatter.Enabled = true;
+            if (chartOut.Series.Count != 0)
+            {
+                for (int i = 0; i < chartOut.Series.Count; i++)
+                {
+                    chartOut.Series[i].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+                }
+            }
+        }
+
+        private void BtnScatter_Click(object sender, EventArgs e)
+        {
+            btnSpline.Enabled = true;
+            btnLine.Enabled = true;
+            btnScatter.Enabled = false;
+            if (chartOut.Series.Count != 0)
+            {
+                for (int i = 0; i < chartOut.Series.Count; i++)
+                {
+                    chartOut.Series[i].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
+                }
+            }
+        }
+
+        private void ChkChScroll_CheckedChanged(object sender, EventArgs e)
+        {
+            if(chkChScroll.Checked == true)
+            {
+                //chartOut.ChartAreas[0].AxisX.ScaleView.Scroll(System.Windows.Forms.DataVisualization.Charting.ScrollType.Last);
+            }
+            else
+            {
+                //chartOut.ChartAreas[0].AxisX.ScaleView.Scroll()
+            }
         }
     }
 }
