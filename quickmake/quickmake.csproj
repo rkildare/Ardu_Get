@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{EE64FB5E-85DC-41E0-8D14-3D3895CDC060}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>quickmake</RootNamespace>
+    <RootNamespace>ardu_get</RootNamespace>
     <AssemblyName>Arduino Data Getter</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -72,6 +72,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
