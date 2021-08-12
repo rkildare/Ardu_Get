@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO.Ports;
 
-namespace quickmake
+namespace ardu_get
 {
     public partial class Form1 : Form
     {
@@ -20,7 +20,6 @@ namespace quickmake
         public Form1()
         {
             InitializeComponent();
-            cmbPort.Items.AddRange(SerialPort.GetPortNames());
         }
 
         private SerialPort Make_Port()
@@ -44,6 +43,9 @@ namespace quickmake
         {
             btnStart.Enabled = true;
             btnStop.Enabled = false;
+            port.DataReceived -= DataRecievedHandler;
+            port.DiscardInBuffer();
+            port.DiscardOutBuffer();
             port.Close();
             port.Dispose();
             chkChScroll.Checked = false;
@@ -75,12 +77,12 @@ namespace quickmake
                         double[] graphvals = Array.ConvertAll<string, double>(strarr, double.Parse);
                         int k = 0;
                         string name;
-                        while (chartOut.Series.Count != graphvals.Length)
+                        while (chartOut.Series.Count < graphvals.Length)
                         {
 
                             name = "Series" + (chartOut.Series.Count + 1).ToString();
                             chartOut.Series.Add(name);
-                            if(btnSpline.Enabled == false)
+                            if (btnSpline.Enabled == false)
                             {
                                 chartOut.Series[name].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
                             }
@@ -93,27 +95,29 @@ namespace quickmake
                                 chartOut.Series[name].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
                             }
                         }
-                        while (k!=graphvals.Length)
+                        while (k != graphvals.Length)
                         {
                             name = "Series" + (k + 1).ToString();
                             chartOut.Series[name].Points.AddY(graphvals[k]);
+                            if (Convert.ToInt32(txtMaxPt.Text) > 0)
+                            {
+                                if (Convert.ToInt32(txtMaxPt.Text) < chartOut.Series[name].Points.Count)
+                                {
+                                    chartOut.Series[name].Points.RemoveAt(0);
+                                }
+                            }
                             k = k + 1;
                         }
-                        
-                        if(chkChScroll.Checked)
+
+                        if (chkChScroll.Checked)
                         {
-                            //chartOut.ChartAreas[0].AxisX.ScaleView.Zoom(chartOut.ChartAreas[0].AxisX.ScaleView.ViewMinimum + 1, chartOut.ChartAreas[0].AxisX.ScaleView.ViewMaximum + 1);
                             chartOut.ChartAreas[0].AxisX.ScaleView.Scroll(System.Windows.Forms.DataVisualization.Charting.ScrollType.Last);
                         }
-                        
+
                     }
                 }
-                catch
-                {
-
-                }
+                catch { }
             }
-
             if (chkSave.Checked)
             {
                 try
@@ -146,16 +150,11 @@ namespace quickmake
             SerialPort sp = (SerialPort)sender;
             try
             {
-                
                 string data = sp.ReadLine();
-                Console.WriteLine("recieved data:" + data);
                 Invoke(this.myDelegate, new Object[] { data });
                 
             }
-            catch
-            {
-
-            }
+            catch { }
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -234,16 +233,10 @@ namespace quickmake
             }
         }
 
-        private void ChkChScroll_CheckedChanged(object sender, EventArgs e)
+        private void CmbPort_DropDown(object sender, EventArgs e)
         {
-            if(chkChScroll.Checked == true)
-            {
-                //chartOut.ChartAreas[0].AxisX.ScaleView.Scroll(System.Windows.Forms.DataVisualization.Charting.ScrollType.Last);
-            }
-            else
-            {
-                //chartOut.ChartAreas[0].AxisX.ScaleView.Scroll()
-            }
+            cmbPort.Items.Clear();
+            cmbPort.Items.AddRange(SerialPort.GetPortNames());
         }
     }
 }

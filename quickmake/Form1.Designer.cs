@@ -1,4 +1,4 @@
-﻿namespace quickmake
+﻿namespace ardu_get
 {
     partial class Form1
     {
@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
@@ -48,6 +49,9 @@
             this.btnSpline = new System.Windows.Forms.Button();
             this.trackZoom = new System.Windows.Forms.TrackBar();
             this.chkChScroll = new System.Windows.Forms.CheckBox();
+            this.txtMaxPt = new System.Windows.Forms.TextBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.chartOut)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackZoom)).BeginInit();
             this.SuspendLayout();
@@ -57,9 +61,10 @@
             this.cmbPort.FormattingEnabled = true;
             this.cmbPort.Location = new System.Drawing.Point(13, 13);
             this.cmbPort.Name = "cmbPort";
-            this.cmbPort.Size = new System.Drawing.Size(121, 21);
+            this.cmbPort.Size = new System.Drawing.Size(56, 21);
             this.cmbPort.TabIndex = 0;
             this.cmbPort.Text = "Port";
+            this.cmbPort.DropDown += new System.EventHandler(this.CmbPort_DropDown);
             // 
             // cmbBaud
             // 
@@ -75,16 +80,16 @@
             "14400",
             "19200",
             "38400"});
-            this.cmbBaud.Location = new System.Drawing.Point(12, 40);
+            this.cmbBaud.Location = new System.Drawing.Point(76, 13);
             this.cmbBaud.Name = "cmbBaud";
-            this.cmbBaud.Size = new System.Drawing.Size(121, 21);
+            this.cmbBaud.Size = new System.Drawing.Size(58, 21);
             this.cmbBaud.TabIndex = 1;
-            this.cmbBaud.Text = "Baud rate";
+            this.cmbBaud.Text = "Baud";
             // 
             // chkSave
             // 
             this.chkSave.AutoSize = true;
-            this.chkSave.Location = new System.Drawing.Point(13, 68);
+            this.chkSave.Location = new System.Drawing.Point(13, 40);
             this.chkSave.Name = "chkSave";
             this.chkSave.Size = new System.Drawing.Size(83, 17);
             this.chkSave.TabIndex = 2;
@@ -93,7 +98,7 @@
             // 
             // txtLoc
             // 
-            this.txtLoc.Location = new System.Drawing.Point(13, 92);
+            this.txtLoc.Location = new System.Drawing.Point(13, 65);
             this.txtLoc.Name = "txtLoc";
             this.txtLoc.Size = new System.Drawing.Size(121, 20);
             this.txtLoc.TabIndex = 3;
@@ -101,7 +106,7 @@
             // 
             // btnBrowse
             // 
-            this.btnBrowse.Location = new System.Drawing.Point(13, 119);
+            this.btnBrowse.Location = new System.Drawing.Point(13, 92);
             this.btnBrowse.Name = "btnBrowse";
             this.btnBrowse.Size = new System.Drawing.Size(120, 25);
             this.btnBrowse.TabIndex = 4;
@@ -111,7 +116,7 @@
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(12, 151);
+            this.btnStart.Location = new System.Drawing.Point(12, 124);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(57, 45);
             this.btnStart.TabIndex = 5;
@@ -151,7 +156,7 @@
             // btnStop
             // 
             this.btnStop.Enabled = false;
-            this.btnStop.Location = new System.Drawing.Point(75, 152);
+            this.btnStop.Location = new System.Drawing.Point(75, 125);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(57, 44);
             this.btnStop.TabIndex = 8;
@@ -234,13 +239,36 @@
             this.chkChScroll.Size = new System.Drawing.Size(15, 14);
             this.chkChScroll.TabIndex = 13;
             this.chkChScroll.UseVisualStyleBackColor = true;
-            this.chkChScroll.CheckedChanged += new System.EventHandler(this.ChkChScroll_CheckedChanged);
+            // 
+            // txtMaxPt
+            // 
+            this.txtMaxPt.Location = new System.Drawing.Point(76, 176);
+            this.txtMaxPt.Name = "txtMaxPt";
+            this.txtMaxPt.Size = new System.Drawing.Size(56, 20);
+            this.txtMaxPt.TabIndex = 14;
+            this.txtMaxPt.Text = "1000";
+            this.toolTip1.SetToolTip(this.txtMaxPt, resources.GetString("txtMaxPt.ToolTip"));
+            // 
+            // toolTip1
+            // 
+            this.toolTip1.ToolTipTitle = "Maximum Data Points";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 179);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(53, 13);
+            this.label1.TabIndex = 15;
+            this.label1.Text = "Max Vals.";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(603, 495);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.txtMaxPt);
             this.Controls.Add(this.chkChScroll);
             this.Controls.Add(this.trackZoom);
             this.Controls.Add(this.btnSpline);
@@ -259,7 +287,7 @@
             this.Controls.Add(this.cmbPort);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
-            this.Text = "Arduino Data Getter V1.1";
+            this.Text = "Arduino Data Getter V2.0a";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.chartOut)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackZoom)).EndInit();
@@ -287,6 +315,9 @@
         private System.Windows.Forms.Button btnSpline;
         private System.Windows.Forms.TrackBar trackZoom;
         private System.Windows.Forms.CheckBox chkChScroll;
+        private System.Windows.Forms.TextBox txtMaxPt;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Label label1;
     }
 }
 
