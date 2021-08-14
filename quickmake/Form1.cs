@@ -30,14 +30,21 @@ namespace ardu_get
 
         private void BtnStart_Click(object sender, EventArgs e)
         {
-            btnStart.Enabled = false;
-            btnStop.Enabled = true;
-            port.PortName = cmbPort.Text; 
-            port.BaudRate = Convert.ToInt32(cmbBaud.Text);
-            port.DataReceived += new SerialDataReceivedEventHandler(DataRecievedHandler);
-            port.Open();
+            try
+            {
+                port.PortName = cmbPort.Text;
+                port.BaudRate = Convert.ToInt32(cmbBaud.Text);
+                port.DataReceived += new SerialDataReceivedEventHandler(DataRecievedHandler);
+                port.Open();
+            }
+            catch
+            {
+                MessageBox.Show("Error... Did you select a port and baud-rate?");
+            }
             port.DiscardInBuffer();
             port.DiscardOutBuffer();
+            btnStart.Enabled = false;
+            btnStop.Enabled = true;
         }
         private void BtnStop_Click(object sender, EventArgs e)
         {
@@ -151,7 +158,7 @@ namespace ardu_get
             try
             {
                 string data = sp.ReadLine();
-                Invoke(this.myDelegate, new Object[] { data });
+                BeginInvoke(this.myDelegate, new Object[] { data });
                 
             }
             catch { }
